@@ -1,7 +1,17 @@
 import { getWords } from "@/data/word";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 
 export default async function Dashboard() {
-  const words = await getWords();
+ const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user) {
+    redirect("/");
+  }
+  const words = await getWords(session.user.id);
 
   return (
     <div>
