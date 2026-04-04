@@ -18,6 +18,9 @@ model Word {
   sentences ExampleSentence[]
   soundUrl  String
   createdAt DateTime          @db.Timestamptz
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 }
 
 model ExampleSentence {
@@ -38,6 +41,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  words         Word[]
 
   @@unique([email])
   @@map("user")
