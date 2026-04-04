@@ -21,6 +21,8 @@ model Word {
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
+
+  @@map("words")
 }
 
 model ExampleSentence {
@@ -29,6 +31,8 @@ model ExampleSentence {
   createdAt DateTime @db.Timestamptz
   wordId    String
   word      Word     @relation(fields: [wordId], references: [id])
+
+  @@map("exampleSentences")
 }
 
 model User {
