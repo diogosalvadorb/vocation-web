@@ -21,11 +21,11 @@ export default async function Dashboard() {
       <Header />
 
       <div className="mx-auto max-w-6xl px-4 py-8">
-        <Tabs defaultValue="words" className="m-auto w-100">
-          <TabsList>
+        <Tabs defaultValue="words" className="w-full">
+          <TabsList className="w-full max-w-xl mx-auto grid grid-cols-3 h-11 bg-card/50 backdrop-blur-sm p-1 gap-1 mb-8 rounded-xl border border-border/50">
             <TabsTrigger value="words">Words</TabsTrigger>
+            <TabsTrigger value="commons">Commons</TabsTrigger>
             <TabsTrigger value="metrics">Metrics</TabsTrigger>
-            <TabsTrigger value="counter">Counter</TabsTrigger>
           </TabsList>
           <TabsContent value="words">
             <WordsTab userId={session.user.id} />
