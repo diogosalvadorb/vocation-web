@@ -15,6 +15,7 @@ datasource db {
 model Word {
   id        String            @id @default(uuid())
   text      String
+  textTranslated String
   sentences ExampleSentence[]
   soundUrl  String
   createdAt DateTime          @db.Timestamptz
@@ -27,7 +28,9 @@ model Word {
 
 model ExampleSentence {
   id        String   @id @default(uuid())
-  content   String
+  text   String
+  textTranslated String
+  soundUrl  String
   createdAt DateTime @db.Timestamptz
   wordId    String
   word      Word     @relation(fields: [wordId], references: [id])
