@@ -1,11 +1,12 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
-import { WordsTab } from "./_components/WordTab";
-import { MetricsTab } from "./_components/MetricsTab";
-import { CommonTab } from "./_components/CommonTab";
+import { WordsTab } from "./wordTab/page";
+import { MetricsTab } from "./metricsTab/MetricsTab";
+import { CommonTab } from "./commonTab/CommonTab";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Header } from "@/components/ui/Header";
+import { getWords } from "@/data/word";
 
 export default async function Dashboard() {
   const session = await auth.api.getSession({
@@ -16,6 +17,8 @@ export default async function Dashboard() {
     redirect("/");
   }
 
+  const words = await getWords(session.user.id);
+  
   return (
     <div className="bg-background min-h-screen">
       <Header />
@@ -28,7 +31,7 @@ export default async function Dashboard() {
             <TabsTrigger value="metrics">Metrics</TabsTrigger>
           </TabsList>
           <TabsContent value="words">
-            <WordsTab userId={session.user.id} />
+            <WordsTab words={words} />
           </TabsContent>
           <TabsContent value="commons">
             <CommonTab />

@@ -11,13 +11,13 @@ interface WordCardProps {
 }
 
 export function WordCard({ word }: WordCardProps) {
-  const [open, setOpen] = useState(false);
+  const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
   return (
     <>
       <div
         className="group flex items-center gap-3 rounded-xl border border-border/50 bg-card/80 backdrop-blur-sm p-4 cursor-pointer hover:bg-card hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200"
-        onClick={() => setOpen(true)}
+        onClick={() => setDialogIsOpen(true)}
       >
         <Button
           variant="ghost"
@@ -31,7 +31,7 @@ export function WordCard({ word }: WordCardProps) {
           <p className="text-sm text-muted-foreground truncate">{word.textTranslated}</p>
         </div>
       </div>
-      <WordDialog word={word} open={open} onOpenChange={setOpen} />
+      <WordDialog word={word} isOpen={dialogIsOpen} setIsOpen={setDialogIsOpen} />
     </>
   )
 }

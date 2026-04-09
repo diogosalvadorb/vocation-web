@@ -1,21 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getWords } from "@/data/word";
 import { Search } from "lucide-react";
-import { WordCard } from "./Word-Card";
+import { WordCard } from "./_components/Word-Card";
 import { Word } from "@/types/words";
 
-interface Props {
-  userId: string;
+interface WordsTabProps {
+  words: Word[];
 }
 
-export async function WordsTab({ userId }: Props) {
-  const words = await getWords(userId);
-
-  const handleWordClick = (word: Word) => {
-    console.log("Clicked word:");
-  }
-
+export async function WordsTab({ words }: WordsTabProps) {
   return (
     <div className="space-y-8">
       <div className="flex items-center gap-4">

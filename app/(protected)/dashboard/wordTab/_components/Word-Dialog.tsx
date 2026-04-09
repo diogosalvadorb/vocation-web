@@ -9,13 +9,13 @@ import { Word } from "@/types/words";
 
 interface WordDialogProps {
   word: Word;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
 }
 
-export function WordDialog({ word, open, onOpenChange }: WordDialogProps) {
+export function WordDialog({ word, isOpen, setIsOpen }: WordDialogProps) {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>Sentences</DialogTitle>
