@@ -1,3 +1,5 @@
+"use server";
+
 import { protectedActionClient } from "@/lib/action-client";
 import { prisma } from "@/lib/prisma";
 import { returnValidationErrors } from "next-safe-action";
