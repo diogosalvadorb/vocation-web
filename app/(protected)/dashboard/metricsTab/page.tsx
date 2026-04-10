@@ -77,39 +77,43 @@ export function MetricsTab() {
     studyData.reading.today +
     studyData.writing.today +
     Math.floor((dataVideos?.todayDurationSeconds ?? 0) / 60);
-    
+
   const totalAll =
     studyData.reading.total +
     studyData.writing.total +
     Math.floor((dataVideos?.totalDurationSeconds ?? 0) / 60);
 
-  console.log("Video Data Today:", dataVideos?.todayDurationSeconds);
-  console.log("Video Data Total:", dataVideos?.totalDurationSeconds);
-
-  if (loadingVideos) {
-    return (
-      <div className="text-muted-foreground text-sm">Loading metrics...</div>
-    );
-  }
-
-  if (!dataVideos) {
-    return <div className="text-sm text-red-500">Failed to load metrics</div>;
-  }
-
   return (
     <div className="space-y-8">
-      <StudySummary totalToday={totalToday} totalAll={totalAll} />
-      <VideoMetrics dataVideo={dataVideos} />
-      <ReadingTimer
-        todayMinutes={studyData.reading.today}
-        totalMinutes={studyData.reading.total}
-        onSave={handleReadingSave}
-      />
-      <WritingTimer
-        todayMinutes={studyData.writing.today}
-        totalMinutes={studyData.writing.total}
-        onSave={handleWritingSave}
-      />
+      {loadingStudy ? (
+        <div className="text-muted-foreground text-sm">
+          Loading study metrics...
+        </div>
+      ) : (
+        <>
+          <StudySummary totalToday={totalToday} totalAll={totalAll} />
+
+          {loadingVideos ? (
+            <div className="text-muted-foreground text-sm">
+              Loading video metrics...
+            </div>
+          ) : dataVideos ? (
+            <VideoMetrics dataVideo={dataVideos} />
+          ) : null}
+
+          <ReadingTimer
+            todayMinutes={studyData.reading.today}
+            totalMinutes={studyData.reading.total}
+            onSave={handleReadingSave}
+          />
+
+          <WritingTimer
+            todayMinutes={studyData.writing.today}
+            totalMinutes={studyData.writing.total}
+            onSave={handleWritingSave}
+          />
+        </>
+      )}
     </div>
   );
 }
