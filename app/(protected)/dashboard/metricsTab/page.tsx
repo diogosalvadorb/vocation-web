@@ -1,36 +1,40 @@
 "use client";
 
+import { StudySummary } from "./_components/StudySummary";
+import { VideoMetrics } from "./_components/VideoMetrics";
+import { ReadingTimer } from "./_components/ReadingTimer";
+import { WritingTimer } from "./_components/WritingTimer";
 import { useEffect, useState } from "react";
 import { getInputEnglishPlaylist } from "@/actions/get-youtube-playlist";
 
 export function MetricsTab() {
-  const [data, setData] = useState<{
+const [dataVideos, setDataVideos] = useState<{
     todayVideosCount: number;
     totalDurationFormatted: string;
     playlistTitle: string;
   } | null>(null);
 
-  const [loading, setLoading] = useState(true);
+  const [loadingVideos, setLoadingVideos] = useState(true);
 
   useEffect(() => {
-    async function load() {
+    async function loadVideos() {
       try {
         const result = await getInputEnglishPlaylist();
 
         if (result?.data) {
-          setData(result.data);
+          setDataVideos(result.data);
         }
       } catch (err) {
         console.error(err);
       } finally {
-        setLoading(false);
+        setLoadingVideos(false);
       }
     }
 
-    load();
+    loadVideos();
   }, []);
 
-  if (loading) {
+  if (loadingVideos) {
     return (
       <div className="text-muted-foreground text-sm">
         Loading metrics...
@@ -38,7 +42,7 @@ export function MetricsTab() {
     );
   }
 
-  if (!data) {
+  if (!dataVideos) {
     return (
       <div className="text-red-500 text-sm">
         Failed to load metrics
@@ -47,28 +51,11 @@ export function MetricsTab() {
   }
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold">{data.playlistTitle}</h2>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div className="bg-card border-border/50 rounded-xl border p-6">
-          <p className="text-muted-foreground text-sm">
-            Added Today
-          </p>
-          <p className="text-3xl font-bold">
-            {data.todayVideosCount}
-          </p>
-        </div>
-
-        <div className="bg-card border-border/50 rounded-xl border p-6">
-          <p className="text-muted-foreground text-sm">
-            Total Study Time
-          </p>
-          <p className="text-3xl font-bold">
-            {data.totalDurationFormatted}
-          </p>
-        </div>
-      </div>
+    <div className="space-y-8">
+      <StudySummary />
+      <VideoMetrics dataVideo={dataVideos} />
+      <ReadingTimer />
+      <WritingTimer />
     </div>
   );
 }
