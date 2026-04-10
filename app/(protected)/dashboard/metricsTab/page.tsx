@@ -6,13 +6,10 @@ import { ReadingTimer } from "./_components/ReadingTimer";
 import { WritingTimer } from "./_components/WritingTimer";
 import { useEffect, useState } from "react";
 import { getInputEnglishPlaylist } from "@/actions/get-youtube-playlist";
+import { PlaylistMetrics } from "@/types/video";
 
 export function MetricsTab() {
-const [dataVideos, setDataVideos] = useState<{
-    todayVideosCount: number;
-    totalDurationFormatted: string;
-    playlistTitle: string;
-  } | null>(null);
+const [dataVideos, setDataVideos] = useState<PlaylistMetrics | null>(null);
 
   const [loadingVideos, setLoadingVideos] = useState(true);
 

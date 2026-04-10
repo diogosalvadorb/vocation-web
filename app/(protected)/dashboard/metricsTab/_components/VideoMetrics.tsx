@@ -1,13 +1,12 @@
 import { Card } from "@/components/ui/card";
+import { PlaylistMetrics } from "@/types/video";
 import { Video } from "lucide-react";
 
 interface VideoMetricsProps {
-  playlistTitle: string;
-  todayVideosCount: number;
-  totalDurationFormatted: string;
+  dataVideo: PlaylistMetrics;
 }
 
-export function VideoMetrics({ dataVideo }: { dataVideo: VideoMetricsProps }) {
+export function VideoMetrics({ dataVideo }: VideoMetricsProps) {
   return (
     <div>
       <h3 className="font-semibold text-foreground flex items-center gap-2 mb-4">
@@ -17,7 +16,7 @@ export function VideoMetrics({ dataVideo }: { dataVideo: VideoMetricsProps }) {
       <div className="grid grid-cols-2 gap-4">
         <Card className="p-5 border-border/50 rounded-xl">
           <span className="text-sm text-muted-foreground font-semibold">Today Videos</span>
-          <p className="text-2xl font-bold text-foreground mt-1">{dataVideo.todayVideosCount} videos</p>
+          <p className="text-2xl font-bold text-foreground mt-1">{dataVideo.todayDurationFormatted}</p>
         </Card>
         <Card className="p-5 border-border/50 rounded-xl">
           <span className="text-sm text-muted-foreground font-semibold">Total Duration</span>

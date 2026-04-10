@@ -2,14 +2,6 @@
 
 import { protectedActionClient } from "@/lib/action-client";
 
-export interface PlaylistMetrics {
-  totalVideos: number;
-  totalDurationSeconds: number;
-  totalDurationFormatted: string;
-  todayVideosCount: number;
-  playlistTitle: string;
-}
-
 function parseISO8601Duration(duration: string): number {
   const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
   if (!match) return 0;
@@ -49,25 +41,24 @@ export const getInputEnglishPlaylist = protectedActionClient.action(
       throw new Error(
         !apiKey
           ? "YOUTUBE_API_KEY nao configurada"
-          : "YOUTUBE_PLAYLIST_ID nao configurada"
+          : "YOUTUBE_PLAYLIST_ID nao configurada",
       );
     }
 
-    const playlistRes = await fetch(
-      `https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${apiKey}`
+    const playlistResponse = await fetch(
+      `https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${apiKey}`,
     );
 
-    const playlistData = await playlistRes.json();
+    const playlistData = await playlistResponse.json();
 
-    const playlistTitle =
-      playlistData.items?.[0]?.snippet?.title ?? "Playlist";
+    const playlistTitle = playlistData.items?.[0]?.snippet?.title ?? "Playlist";
 
     const playlistItems: Array<{ videoId: string; addedAt: string }> = [];
     let nextPageToken: string | undefined;
 
     do {
       const url = new URL(
-        "https://www.googleapis.com/youtube/v3/playlistItems"
+        "https://www.googleapis.com/youtube/v3/playlistItems",
       );
 
       url.searchParams.set("part", "snippet,contentDetails");
@@ -96,37 +87,38 @@ export const getInputEnglishPlaylist = protectedActionClient.action(
 
     //duração total da playlist
     let totalDurationSeconds = 0;
+    let todayDurationSeconds = 0;
 
     for (let i = 0; i < playlistItems.length; i += 50) {
       const batch = playlistItems.slice(i, i + 50);
       const ids = batch.map((b) => b.videoId).join(",");
 
       const detailsRes = await fetch(
-        `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${ids}&key=${apiKey}`
+        `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${ids}&key=${apiKey}`,
       );
 
       const detailsData = await detailsRes.json();
 
-      for (const item of detailsData.items ?? []) {
+      for (let index = 0; index < (detailsData.items ?? []).length; index++) {
+        const item = detailsData.items[index];
         const duration = parseISO8601Duration(
-          item.contentDetails?.duration ?? "PT0S"
+          item.contentDetails?.duration ?? "PT0S",
         );
 
         totalDurationSeconds += duration;
+
+        const video = batch[index]; 
+
+        if (video && isToday(video.addedAt)) {
+          todayDurationSeconds += duration;
+        }
       }
     }
 
-    // videos adicionados na data atual
-    const todayVideosCount = playlistItems.filter((v) =>
-      isToday(v.addedAt)
-    ).length;
-
     return {
-      totalVideos: playlistItems.length,
-      totalDurationSeconds,
       totalDurationFormatted: formatDuration(totalDurationSeconds),
-      todayVideosCount,
+      todayDurationFormatted: formatDuration(todayDurationSeconds),
       playlistTitle,
     };
-  }
+  },
 );
