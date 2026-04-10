@@ -73,6 +73,19 @@ export function MetricsTab() {
     }));
   }, []);
 
+  const totalToday =
+    studyData.reading.today +
+    studyData.writing.today +
+    Math.floor((dataVideos?.todayDurationSeconds ?? 0) / 60);
+    
+  const totalAll =
+    studyData.reading.total +
+    studyData.writing.total +
+    Math.floor((dataVideos?.totalDurationSeconds ?? 0) / 60);
+
+  console.log("Video Data Today:", dataVideos?.todayDurationSeconds);
+  console.log("Video Data Total:", dataVideos?.totalDurationSeconds);
+
   if (loadingVideos) {
     return (
       <div className="text-muted-foreground text-sm">Loading metrics...</div>
@@ -85,7 +98,7 @@ export function MetricsTab() {
 
   return (
     <div className="space-y-8">
-      <StudySummary />
+      <StudySummary totalToday={totalToday} totalAll={totalAll} />
       <VideoMetrics dataVideo={dataVideos} />
       <ReadingTimer
         todayMinutes={studyData.reading.today}

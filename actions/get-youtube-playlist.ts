@@ -118,6 +118,8 @@ export const getInputEnglishPlaylist = protectedActionClient.action(
     return {
       totalDurationFormatted: formatDuration(totalDurationSeconds),
       todayDurationFormatted: formatDuration(todayDurationSeconds),
+      totalDurationSeconds,
+      todayDurationSeconds,
       playlistTitle,
     };
   },
