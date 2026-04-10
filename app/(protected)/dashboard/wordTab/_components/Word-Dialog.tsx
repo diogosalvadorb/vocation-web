@@ -1,3 +1,4 @@
+import { createSentence } from "@/actions/create-sentence";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,7 +9,12 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Word } from "@/types/words";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import z from "zod";
 
 interface WordDialogProps {
   word: Word;
@@ -35,7 +41,41 @@ function highlightWord(text: string, word: string) {
   });
 }
 
+const formSchema = z.object({
+  text: z.string().min(2).max(100),
+  textTranslated: z.string().min(2).max(300),
+});
+
+type FormSchema = z.infer<typeof formSchema>;
+
 export function WordDialog({ word, isOpen, setIsOpen }: WordDialogProps) {
+  const { executeAsync: executeCreateSentence, isPending: isCreatingSentence } =
+    useAction(createSentence);
+
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {},
+  });
+
+  const onSubmit = async (data: FormSchema) => {
+    const result = await executeCreateSentence({
+      wordId: word.id,
+      ...data,
+    });
+
+    if (result.validationErrors) {
+      return toast.error(result.validationErrors._errors?.[0]);
+    }
+
+    if (result.serverError) {
+      return toast.error("Error creating sentence. Please try again later.");
+    }
+
+    setIsOpen(false);
+    form.reset();
+    toast.success("Sentence created successfully");
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="border-border/50 bg-card/95 backdrop-blur-xl sm:max-w-lg">
@@ -69,24 +109,27 @@ export function WordDialog({ word, isOpen, setIsOpen }: WordDialogProps) {
             ))}
           </div>
 
-          <div className="border-border/50 space-y-3 border-t pt-3">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <p className="text-foreground text-sm font-medium">Add Sentence</p>
             <Input
               placeholder="Sentence in English..."
+              {...form.register("text")}
               className="bg-muted/30 border-border/50 focus:border-primary/50 h-11 rounded-xl transition-all"
             />
             <Input
               placeholder="Translation in Portuguese..."
+              {...form.register("textTranslated")}
               className="bg-muted/30 border-border/50 focus:border-primary/50 h-11 rounded-xl transition-all"
             />
             <Button
-              variant="default"
+              type="submit"
+              disabled={isCreatingSentence}
               className="shadow-primary/20 h-11 w-full rounded-xl shadow-lg transition-all"
             >
               <Plus className="mr-2 h-4 w-4" />
-              Add Sentence
+              {isCreatingSentence ? "Adding..." : "Add Sentence"}
             </Button>
-          </div>
+          </form>
         </div>
       </DialogContent>
     </Dialog>

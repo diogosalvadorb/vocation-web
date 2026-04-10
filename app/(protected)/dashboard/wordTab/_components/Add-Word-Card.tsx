@@ -99,7 +99,7 @@ export function AddWordDialog({ isOpen, setIsOpen }: AddWordDialogProps) {
               disabled={isCreatingWord}
             >
               <Plus className="mr-2 h-4 w-4" />
-              Add Word
+              {isCreatingWord ? "Adding..." : "Add Word"}
             </Button>
           </div>
         </form>
