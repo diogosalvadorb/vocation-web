@@ -14,7 +14,7 @@ export const getCommonPhrases = async ({
     where: {
       userId,
 
-      ...(categoryId
+      ...(categoryId && categoryId !== "all"
         ? {
             categories: {
               some: {
@@ -35,4 +35,14 @@ export const getCommonPhrases = async ({
   });
 
   return commonPhrases;
+};
+
+export const getCommonCategories = async () => {
+  const categories = await prisma.category.findMany({
+    orderBy: {
+      name: "asc",
+    },
+  });
+
+  return categories;
 };

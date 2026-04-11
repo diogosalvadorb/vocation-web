@@ -3,16 +3,35 @@
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { AddCommonPhraseDialog } from "./_components/Add-Common-Phrase-Dialog";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { CommonPhraseCard } from "./_components/Common-Phrase-Card";
-import { CommonPhrase } from "@/types/common";
+import { Category, CommonPhrase } from "@/types/common";
+import { CategoryFilter } from "./_components/Category-Filter";
 
 interface CommonTabProps {
   commonPhrases: CommonPhrase[];
+  commonCategories: Category[];
 }
 
-export function CommonTab({ commonPhrases }: CommonTabProps) {
+export function CommonTab({ commonPhrases, commonCategories }: CommonTabProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+
+  const filtered = useMemo(() => {
+    return commonPhrases.filter((p) => {
+      const matchCategory =
+        selectedCategory === "all" ||
+        p.categories.some((c) => c.category.id === selectedCategory);
+
+      const matchSearch =
+        !search.trim() ||
+        p.text.toLowerCase().includes(search.toLowerCase()) ||
+        p.textTranslated.toLowerCase().includes(search.toLowerCase());
+
+      return matchCategory && matchSearch;
+    });
+  }, [commonPhrases, selectedCategory, search]);
 
   return (
     <div className="space-y-6">
@@ -21,28 +40,35 @@ export function CommonTab({ commonPhrases }: CommonTabProps) {
           <Search className="text-muted-foreground absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2" />
           <Input
             placeholder="Search phrase or translation..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="bg-card/50 border-border/50 focus:bg-card focus:border-primary/50 h-11 rounded-xl pl-11 transition-all"
           />
         </div>
         <AddCommonPhraseDialog
           isOpen={dialogOpen}
           setIsOpen={setDialogOpen}
-          categories={[
-            { id: "1", name: "travel" },
-            { id: "2", name: "work" },
-          ]}
+          categories={commonCategories}
         />
       </div>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {commonPhrases.map((phrase) => (
-          <CommonPhraseCard key={phrase.id} commonPhrase={phrase} />
-        ))}
-      </div>
-      
-      {commonPhrases.length === 0 && (
-        <p className="text-muted-foreground text-center text-sm">
-          No common phrases found.
-        </p>
+      <CategoryFilter
+        categories={commonCategories}
+        selected={selectedCategory}
+        onChange={setSelectedCategory}
+      />
+
+      {filtered.length === 0 ? (
+        <div className="text-muted-foreground py-12 text-center text-sm">
+          {commonPhrases.length === 0
+            ? "No phrases yet. Add your first common phrase!"
+            : "No phrases found for this filter."}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {filtered.map((phrase) => (
+            <CommonPhraseCard key={phrase.id} commonPhrase={phrase} />
+          ))}
+        </div>
       )}
     </div>
   );

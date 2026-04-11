@@ -7,7 +7,7 @@ import { CommonTab } from "./commonTab/page";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Header } from "@/components/ui/Header";
 import { getWords } from "@/data/word";
-import { getCommonPhrases } from "@/data/common";
+import { getCommonCategories, getCommonPhrases } from "@/data/common";
 
 export default async function Dashboard() {
   const session = await auth.api.getSession({
@@ -20,7 +20,7 @@ export default async function Dashboard() {
 
   const words = await getWords(session.user.id);
   const commonPhrases = await getCommonPhrases({ userId: session.user.id });
-  // const commonCategories = await getCommonCategories(session.user.id);
+  const commonCategories = await getCommonCategories();
 
   return (
     <div className="bg-background min-h-screen">
@@ -52,7 +52,7 @@ export default async function Dashboard() {
             <WordsTab words={words} />
           </TabsContent>
           <TabsContent value="commons">
-            <CommonTab commonPhrases={commonPhrases} />
+            <CommonTab commonPhrases={commonPhrases} commonCategories={commonCategories} />
           </TabsContent>
           <TabsContent value="metrics">
             <MetricsTab />
