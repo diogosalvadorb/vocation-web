@@ -44,6 +44,37 @@ model StudySession {
   @@map("studySessions")
 }
 
+model CommonPhrase {
+  id             String               @id @default(uuid())
+  text           String
+  textTranslated String
+  soundUrl       String               @default("")
+  createdAt      DateTime             @default(now()) @db.Timestamptz
+  userId         String
+  user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categories     CommonPhraseCategory[]
+
+  @@map("commonPhrases")
+}
+
+model Category {
+  id      String               @id @default(uuid())
+  name    String               @unique
+  phrases CommonPhraseCategory[]
+
+  @@map("categories")
+}
+
+model CommonPhraseCategory {
+  phraseId   String
+  categoryId String
+  phrase     CommonPhrase @relation(fields: [phraseId], references: [id], onDelete: Cascade)
+  category   Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([phraseId, categoryId])
+  @@map("commonPhraseCategories")
+}
+
 model User {
   id            String         @id
   name          String
@@ -56,6 +87,7 @@ model User {
   sessions      Session[]
   words         Word[]
   studySessions StudySession[]
+  commonPhrases CommonPhrase[]
 
   @@map("user")
 }
