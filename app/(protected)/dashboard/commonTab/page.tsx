@@ -5,8 +5,13 @@ import { Search } from "lucide-react";
 import { AddCommonPhraseDialog } from "./_components/Add-Common-Phrase-Dialog";
 import { useState } from "react";
 import { CommonPhraseCard } from "./_components/Common-Phrase-Card";
+import { CommonPhrase } from "@/types/common";
 
-export function CommonTab() {
+interface CommonTabProps {
+  commonPhrases: CommonPhrase[];
+}
+
+export function CommonTab({ commonPhrases }: CommonTabProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   return (
@@ -19,12 +24,26 @@ export function CommonTab() {
             className="bg-card/50 border-border/50 focus:bg-card focus:border-primary/50 h-11 rounded-xl pl-11 transition-all"
           />
         </div>
-        <AddCommonPhraseDialog isOpen={dialogOpen} setIsOpen={setDialogOpen} categories={[{ id: "1", name: "travel" }, { id: "2", name: "work" }]} />
+        <AddCommonPhraseDialog
+          isOpen={dialogOpen}
+          setIsOpen={setDialogOpen}
+          categories={[
+            { id: "1", name: "travel" },
+            { id: "2", name: "work" },
+          ]}
+        />
       </div>
-      <CommonPhraseCard></CommonPhraseCard>
-      <CommonPhraseCard></CommonPhraseCard>
-      <CommonPhraseCard></CommonPhraseCard>
-      <CommonPhraseCard></CommonPhraseCard>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {commonPhrases.map((phrase) => (
+          <CommonPhraseCard key={phrase.id} commonPhrase={phrase} />
+        ))}
+      </div>
+      
+      {commonPhrases.length === 0 && (
+        <p className="text-muted-foreground text-center text-sm">
+          No common phrases found.
+        </p>
+      )}
     </div>
   );
 }

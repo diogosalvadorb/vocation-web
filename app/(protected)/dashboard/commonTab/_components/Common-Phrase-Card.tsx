@@ -2,8 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { CommonPhrase } from "@/types/common";
 
-export function CommonPhraseCard() {
+interface CommonPhraseCardProps {
+  commonPhrase: CommonPhrase;
+}
+
+export function CommonPhraseCard({ commonPhrase }: CommonPhraseCardProps) {
   const handlePlayAudio = async (e: React.MouseEvent) => {
     console.log("Playing audio for phrase:");
   };
@@ -20,9 +25,9 @@ export function CommonPhraseCard() {
 
         <div className="min-w-0 flex-1">
           <p className="text-foreground group-hover:text-primary font-semibold transition-colors">
-            TEXT
+            {commonPhrase.text}
           </p>
-          <p className="text-muted-foreground mt-0.5 text-sm">Translation</p>
+          <p className="text-muted-foreground mt-0.5 text-sm">{commonPhrase.textTranslated}</p>
         </div>
       </div>
     </Card>
