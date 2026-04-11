@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { WordsTab } from "./wordTab/page";
 import { MetricsTab } from "./metricsTab/page";
-import { CommonTab } from "./commonTab/CommonTab";
+import { CommonTab } from "./commonTab/page";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Header } from "@/components/ui/Header";
 import { getWords } from "@/data/word";
