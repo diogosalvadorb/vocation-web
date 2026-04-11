@@ -34,7 +34,7 @@ export const createCommonPhrase = protectedActionClient
     try {
       const soundUrl = await generateAndUploadAudio(
         parsedInput.text,
-        "sentence",
+        "common-phrase",
         phrase.id,
       );
 

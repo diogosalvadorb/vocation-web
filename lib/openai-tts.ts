@@ -4,7 +4,7 @@ import { uploadAudioToR2 } from "@/lib/cloudflare-r2";
 
 export async function generateAndUploadAudio(
   text: string,
-  type: "word" | "sentence",
+  type: "word" | "sentence" | "common-phrase",
   id: string,
 ): Promise<string> {
   const result = await generateSpeech({
