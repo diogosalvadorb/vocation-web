@@ -29,5 +29,26 @@ export const createCommonPhrase = protectedActionClient
       include: {
         categories: { include: { category: true } },
       },
-    });   
+    }); 
+    
+    try {
+      const soundUrl = await generateAndUploadAudio(
+        parsedInput.text,
+        "sentence",
+        phrase.id,
+      );
+
+      const updated = await prisma.commonPhrase.update({
+        where: { id: phrase.id },
+        data: { soundUrl },
+        include: {
+          categories: { include: { category: true } },
+        },
+      });
+
+      return updated;
+    } catch (err) {
+      console.error("[TTS] Failed to generate audio for CommonPhrase:", err);
+      return phrase;
+    }
   });
