@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { AddCommonPhraseDialog } from "./_components/Add-Common-Phrase-Dialog";
 import { useState } from "react";
-import { CommonPhraseCard } from "./_components/Common-Phrase";
+import { CommonPhraseCard } from "./_components/Common-Phrase-Card";
 
 export function CommonTab() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -19,7 +19,7 @@ export function CommonTab() {
             className="bg-card/50 border-border/50 focus:bg-card focus:border-primary/50 h-11 rounded-xl pl-11 transition-all"
           />
         </div>
-        <AddCommonPhraseDialog isOpen={dialogOpen} setIsOpen={setDialogOpen} />
+        <AddCommonPhraseDialog isOpen={dialogOpen} setIsOpen={setDialogOpen} categories={[{ id: "1", name: "travel" }, { id: "2", name: "work" }]} />
       </div>
       <CommonPhraseCard></CommonPhraseCard>
       <CommonPhraseCard></CommonPhraseCard>
