@@ -2,6 +2,7 @@
 
 import { protectedActionClient } from "@/lib/action-client";
 import { prisma } from "@/lib/prisma";
+import { generateAndUploadAudio } from "@/lib/openai-tts";
 import { returnValidationErrors } from "next-safe-action";
 import z from "zod";
 
@@ -33,5 +34,21 @@ export const createWord = protectedActionClient
       },
     });
 
-    return word;
+    try {
+      const soundUrl = await generateAndUploadAudio(
+        parsedInput.text,
+        "word",
+        word.id,
+      );
+
+      const updated = await prisma.word.update({
+        where: { id: word.id },
+        data: { soundUrl },
+      });
+
+      return updated;
+    } catch (err) {
+      console.error("[TTS] Failed to generate audio for Word:", err);
+      return word;
+    }
   });

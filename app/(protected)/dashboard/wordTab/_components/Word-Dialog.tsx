@@ -10,11 +10,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Word } from "@/types/words";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
+import { Loader2, Plus, Volume2, VolumeX } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+import { useRef, useState } from "react";
 
 interface WordDialogProps {
   word: Word;
@@ -39,6 +40,68 @@ function highlightWord(text: string, word: string) {
     }
     return part;
   });
+}
+
+function SentenceAudioButton({ soundUrl }: { soundUrl: string }) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const handlePlay = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!soundUrl) return;
+
+    if (isPlaying) {
+      audioRef.current?.pause();
+      if (audioRef.current) audioRef.current.currentTime = 0;
+      setIsPlaying(false);
+      return;
+    }
+
+    setHasError(false);
+    setIsPlaying(true);
+
+    try {
+      if (!audioRef.current) {
+        audioRef.current = new Audio(soundUrl);
+      } else {
+        audioRef.current.src = soundUrl;
+      }
+      audioRef.current.onended = () => setIsPlaying(false);
+      audioRef.current.onerror = () => {
+        setIsPlaying(false);
+        setHasError(true);
+      };
+      await audioRef.current.play();
+    } catch {
+      setIsPlaying(false);
+      setHasError(true);
+    }
+  };
+
+  if (!soundUrl) return null;
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={handlePlay}
+      title="Play sentence"
+      className={`h-7 w-7 shrink-0 rounded-lg transition-colors ${
+        hasError
+          ? "text-destructive/70 hover:text-destructive"
+          : "text-primary/70 hover:text-primary hover:bg-primary/10"
+      }`}
+    >
+      {isPlaying ? (
+        <Loader2 className="h-3 w-3 animate-spin" />
+      ) : hasError ? (
+        <VolumeX className="h-3 w-3" />
+      ) : (
+        <Volume2 className="h-3 w-3" />
+      )}
+    </Button>
+  );
 }
 
 const formSchema = z.object({
@@ -98,9 +161,12 @@ export function WordDialog({ word, isOpen, setIsOpen }: WordDialogProps) {
                 key={sentence.id}
                 className="border-border/50 bg-muted/30 hover:bg-muted/50 rounded-xl border p-4 transition-colors"
               >
-                <p className="text-foreground text-sm leading-relaxed">
-                  {highlightWord(sentence.text, word.text)}
-                </p>
+                <div className="flex items-start justify-between gap-2">
+                  <p className="text-foreground flex-1 text-sm leading-relaxed">
+                    {highlightWord(sentence.text, word.text)}
+                  </p>
+                  <SentenceAudioButton soundUrl={sentence.soundUrl} />
+                </div>
 
                 <p className="text-muted-foreground mt-2 text-sm italic">
                   {sentence.textTranslated}
