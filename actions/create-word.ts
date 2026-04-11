@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { generateAndUploadAudio } from "@/lib/openai-tts";
 import { returnValidationErrors } from "next-safe-action";
 import z from "zod";
+import { revalidatePath } from "next/cache";
 
 const inputSchema = z.object({
   text: z.string(),
@@ -49,6 +50,8 @@ export const createWord = protectedActionClient
       return updated;
     } catch (err) {
       console.error("[TTS] Failed to generate audio for Word:", err);
+
+      revalidatePath("/dashboard");
       return word;
     }
   });

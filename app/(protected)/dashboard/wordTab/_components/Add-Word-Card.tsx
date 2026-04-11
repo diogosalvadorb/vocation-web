@@ -17,6 +17,7 @@ import z from "zod";
 import { createWord } from "@/actions/create-word";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface AddWordDialogProps {
   isOpen: boolean;
@@ -31,9 +32,12 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 export function AddWordDialog({ isOpen, setIsOpen }: AddWordDialogProps) {
+  const router = useRouter();
+  
   const { executeAsync: executeCreateWord, isPending: isCreatingWord } =
     useAction(createWord);
 
+  
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -56,6 +60,7 @@ export function AddWordDialog({ isOpen, setIsOpen }: AddWordDialogProps) {
     setIsOpen(false);
     form.reset();
     toast.success("Word created successfully");
+    router.refresh();
   };
 
   return (

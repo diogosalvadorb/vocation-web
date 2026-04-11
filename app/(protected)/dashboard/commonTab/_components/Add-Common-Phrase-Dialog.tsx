@@ -13,6 +13,7 @@ import { Category } from "@/types/common";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -36,6 +37,8 @@ export function AddCommonPhraseDialog({
   categories,
   setIsOpen,
 }: AddPhrasDialogProps) {
+  const router = useRouter();
+  
   const {
     executeAsync: executeCreateCommonPhrase,
     isPending: isPendingCommonPhrase,
@@ -49,6 +52,7 @@ export function AddCommonPhraseDialog({
       categoryIds: [],
     },
   });
+
 
   const onSubmit = async (data: FormSchema) => {
     const result = await executeCreateCommonPhrase(data);
@@ -66,6 +70,7 @@ export function AddCommonPhraseDialog({
     setIsOpen(false);
     form.reset();
     toast.success("Common phrase created successfully");
+    router.refresh();
   };
 
   const selectedIds = form.watch("categoryIds");

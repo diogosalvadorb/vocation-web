@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import z from "zod";
 import { useRef, useState } from "react";
 
+
 interface WordDialogProps {
   word: Word;
   isOpen: boolean;
@@ -112,6 +113,8 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 export function WordDialog({ word, isOpen, setIsOpen }: WordDialogProps) {
+  const [sentences, setSentences] = useState(word.sentences || []);
+
   const { executeAsync: executeCreateSentence, isPending: isCreatingSentence } =
     useAction(createSentence);
 
@@ -126,6 +129,12 @@ export function WordDialog({ word, isOpen, setIsOpen }: WordDialogProps) {
       ...data,
     });
 
+    const newSentence = result?.data;
+
+    if (newSentence) {
+      setSentences((prev) => [newSentence, ...prev]);
+    }
+
     if (result.validationErrors) {
       return toast.error(result.validationErrors._errors?.[0]);
     }
@@ -134,7 +143,6 @@ export function WordDialog({ word, isOpen, setIsOpen }: WordDialogProps) {
       return toast.error("Error creating sentence. Please try again later.");
     }
 
-    setIsOpen(false);
     form.reset();
     toast.success("Sentence created successfully");
   };
@@ -156,7 +164,7 @@ export function WordDialog({ word, isOpen, setIsOpen }: WordDialogProps) {
 
         <div className="space-y-5">
           <div className="max-h-64 space-y-3 overflow-y-auto pr-1">
-            {word.sentences?.map((sentence) => (
+            {sentences.map((sentence) => (
               <div
                 key={sentence.id}
                 className="border-border/50 bg-muted/30 hover:bg-muted/50 rounded-xl border p-4 transition-colors"

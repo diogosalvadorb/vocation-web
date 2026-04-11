@@ -4,6 +4,7 @@ import { protectedActionClient } from "@/lib/action-client";
 import { prisma } from "@/lib/prisma";
 import { generateAndUploadAudio } from "@/lib/openai-tts";
 import z from "zod";
+import { revalidatePath } from "next/cache";
 
 const inputSchema = z.object({
   text: z.string().min(1).max(300),
@@ -49,6 +50,8 @@ export const createCommonPhrase = protectedActionClient
       return updated;
     } catch (err) {
       console.error("[TTS] Failed to generate audio for CommonPhrase:", err);
+
+      revalidatePath("/dashboard");
       return phrase;
     }
   });
