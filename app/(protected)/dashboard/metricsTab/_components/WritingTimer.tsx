@@ -107,7 +107,7 @@ export function WritingTimer({
                 size="sm"
                 className="bg-primary hover:bg-primary/90 h-9 flex-1 rounded-lg transition-all"
               >
-                <Play className="mr-1 h-3 w-3" /> Iniciar
+                <Play className="mr-1 h-3 w-3" /> Start
               </Button>
             )}
 
@@ -119,7 +119,7 @@ export function WritingTimer({
                 size="sm"
                 className="h-9 flex-1 rounded-lg bg-amber-500 transition-all hover:bg-amber-500/90"
               >
-                <Pause className="mr-1 h-3 w-3" /> Pausar
+                <Pause className="mr-1 h-3 w-3" /> Pause
               </Button>
             )}
 
@@ -131,7 +131,7 @@ export function WritingTimer({
                 size="sm"
                 className="bg-primary hover:bg-primary/90 h-9 flex-1 rounded-lg transition-all"
               >
-                <Play className="mr-1 h-3 w-3" /> Continuar
+                <Play className="mr-1 h-3 w-3" /> Continue
               </Button>
             )}
 
@@ -143,7 +143,7 @@ export function WritingTimer({
                 className="bg-destructive hover:bg-destructive/90 h-9 rounded-lg transition-all"
               >
                 <Square className="mr-1 h-3 w-3" />
-                {isPending ? "Salvando..." : "Finalizar"}
+                {isPending ? "Saving..." : "Finish"}
               </Button>
             )}
           </div>
