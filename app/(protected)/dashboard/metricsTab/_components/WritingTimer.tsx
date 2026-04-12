@@ -150,7 +150,7 @@ export function WritingTimer({
 
           {timer.seconds > 0 && timer.seconds < 60 && (
             <p className="text-muted-foreground mt-2 text-center text-xs">
-              Min. 1 minuto para salvar
+               Min 60 segonds to save session
             </p>
           )}
         </Card>
