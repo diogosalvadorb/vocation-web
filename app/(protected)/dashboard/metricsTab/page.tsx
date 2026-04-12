@@ -4,6 +4,7 @@ import { StudySummary } from "./_components/StudySummary";
 import { VideoMetrics } from "./_components/VideoMetrics";
 import { ReadingTimer } from "./_components/ReadingTimer";
 import { WritingTimer } from "./_components/WritingTimer";
+import { YoutubeConfigDialog } from "./_components/Youtube-Config-Dialog";
 import { useCallback, useEffect, useState } from "react";
 import { getInputEnglishPlaylist } from "@/actions/get-youtube-playlist";
 import { PlaylistMetrics } from "@/types/video";
@@ -12,6 +13,9 @@ import { getStudyStats } from "@/actions/get-study-stats";
 export function MetricsTab() {
   const [dataVideos, setDataVideos] = useState<PlaylistMetrics | null>(null);
   const [loadingVideos, setLoadingVideos] = useState(true);
+  const [hasYoutubeConfig, setHasYoutubeConfig] = useState<boolean | null>(
+    null,
+  );
   const [loadingStudy, setLoadingStudy] = useState(true);
   const [studyData, setStudyData] = useState<StudyData>({
     reading: { today: 0, total: 0 },
@@ -25,9 +29,11 @@ export function MetricsTab() {
 
         if (result?.data) {
           setDataVideos(result.data);
+          setHasYoutubeConfig(true);
         }
       } catch (err) {
         console.error(err);
+        setHasYoutubeConfig(false);
       } finally {
         setLoadingVideos(false);
       }
@@ -97,8 +103,19 @@ export function MetricsTab() {
             <div className="text-muted-foreground text-sm">
               Loading video metrics...
             </div>
+          ) : !hasYoutubeConfig ? (
+            <div className="border-border/50 bg-card/50 flex flex-col items-center gap-3 rounded-xl border p-6 text-center">
+              <p className="text-muted-foreground text-sm font-semibold">
+                Configure your YouTube API Key and Playlist ID to view your
+                video metrics.
+              </p>
+              <YoutubeConfigDialog hasConfig={false} />
+            </div>
           ) : dataVideos ? (
-            <VideoMetrics dataVideo={dataVideos} />
+            <VideoMetrics
+              dataVideo={dataVideos}
+              hasYoutubeConfig={hasYoutubeConfig}
+            />
           ) : null}
 
           <ReadingTimer

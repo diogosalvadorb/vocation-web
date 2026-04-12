@@ -1,6 +1,8 @@
 "use server";
 
 import { protectedActionClient } from "@/lib/action-client";
+import { decrypt } from "@/lib/encryption";
+import { prisma } from "@/lib/prisma";
 
 function parseISO8601Duration(duration: string): number {
   const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
@@ -33,17 +35,23 @@ function isToday(dateStr: string): boolean {
 }
 
 export const getInputEnglishPlaylist = protectedActionClient.action(
-  async () => {
-    const apiKey = process.env.YOUTUBE_API_KEY;
-    const playlistId = process.env.NEXT_PUBLIC_YOUTUBE_PLAYLIST_ID;
+  async ({ ctx }) => {
+    const user = await prisma.user.findUnique({
+      where: { id: ctx.user.id },
+      select: {
+        youtubeApiKey: true,
+        youtubePlaylistId: true,
+      },
+    });
 
-    if (!apiKey || !playlistId) {
+    if (!user?.youtubeApiKey || !user?.youtubePlaylistId) {
       throw new Error(
-        !apiKey
-          ? "YOUTUBE_API_KEY nao configurada"
-          : "YOUTUBE_PLAYLIST_ID nao configurada",
+        "Configure sua API Key e Playlist ID do YouTube nas configurações.",
       );
     }
+
+    const apiKey = decrypt(user.youtubeApiKey);
+    const playlistId = decrypt(user.youtubePlaylistId);
 
     const playlistResponse = await fetch(
       `https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${apiKey}`,
@@ -107,7 +115,7 @@ export const getInputEnglishPlaylist = protectedActionClient.action(
 
         totalDurationSeconds += duration;
 
-        const video = batch[index]; 
+        const video = batch[index];
 
         if (video && isToday(video.addedAt)) {
           todayDurationSeconds += duration;

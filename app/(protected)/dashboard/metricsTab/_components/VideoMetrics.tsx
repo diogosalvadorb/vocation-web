@@ -1,28 +1,44 @@
 import { Card } from "@/components/ui/card";
 import { PlaylistMetrics } from "@/types/video";
 import { Video } from "lucide-react";
+import { YoutubeConfigDialog } from "./Youtube-Config-Dialog";
 
 interface VideoMetricsProps {
   dataVideo: PlaylistMetrics;
+  hasYoutubeConfig: boolean;
 }
 
-export function VideoMetrics({ dataVideo }: VideoMetricsProps) {
+export function VideoMetrics({
+  dataVideo,
+  hasYoutubeConfig,
+}: VideoMetricsProps) {
   return (
     <div>
-      <h3 className="font-semibold text-foreground flex items-center gap-2 mb-4">
-        <Video className="h-5 w-5 text-primary" />
-        Video Metrics
+      <h3 className="text-foreground mb-4 flex items-center justify-between gap-2 font-semibold">
+        <span className="flex items-center gap-2">
+          <Video className="text-primary h-5 w-5" />
+          Video Metrics
+        </span>
+        <YoutubeConfigDialog hasConfig={hasYoutubeConfig} />
       </h3>
       <div className="grid grid-cols-2 gap-4">
-        <Card className="p-5 border-border/50 rounded-xl">
-          <span className="text-sm text-muted-foreground font-semibold">Today Videos</span>
-          <p className="text-2xl font-bold text-foreground mt-1">{dataVideo.todayDurationFormatted}</p>
+        <Card className="border-border/50 rounded-xl p-5">
+          <span className="text-muted-foreground text-sm font-semibold">
+            Today Videos
+          </span>
+          <p className="text-foreground mt-1 text-2xl font-bold">
+            {dataVideo.todayDurationFormatted}
+          </p>
         </Card>
-        <Card className="p-5 border-border/50 rounded-xl">
-          <span className="text-sm text-muted-foreground font-semibold">Total Duration</span>
-          <p className="text-2xl font-bold text-foreground mt-1">{dataVideo.totalDurationFormatted}</p>
+        <Card className="border-border/50 rounded-xl p-5">
+          <span className="text-muted-foreground text-sm font-semibold">
+            Total Duration
+          </span>
+          <p className="text-foreground mt-1 text-2xl font-bold">
+            {dataVideo.totalDurationFormatted}
+          </p>
         </Card>
-      </div>  
+      </div>
     </div>
   );
 }

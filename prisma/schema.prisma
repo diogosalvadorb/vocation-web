@@ -45,21 +45,21 @@ model StudySession {
 }
 
 model CommonPhrase {
-  id             String               @id @default(uuid())
+  id             String                 @id @default(uuid())
   text           String
   textTranslated String
-  soundUrl       String               @default("")
-  createdAt      DateTime             @default(now()) @db.Timestamptz
+  soundUrl       String                 @default("")
+  createdAt      DateTime               @default(now()) @db.Timestamptz
   userId         String
-  user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user           User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
   categories     CommonPhraseCategory[]
 
   @@map("commonPhrases")
 }
 
 model Category {
-  id      String               @id @default(uuid())
-  name    String               @unique
+  id      String                 @id @default(uuid())
+  name    String                 @unique
   phrases CommonPhraseCategory[]
 
   @@map("categories")
@@ -76,13 +76,17 @@ model CommonPhraseCategory {
 }
 
 model User {
-  id            String         @id
+  id            String   @id
   name          String
-  email         String         @unique
-  emailVerified Boolean        @default(false)
+  email         String   @unique
+  emailVerified Boolean  @default(false)
   image         String?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  youtubePlaylistId String?
+  youtubeApiKey     String?
+
   accounts      Account[]
   sessions      Session[]
   words         Word[]
