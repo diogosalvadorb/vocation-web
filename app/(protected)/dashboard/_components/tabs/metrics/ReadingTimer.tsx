@@ -1,15 +1,12 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { Pause, PenLine, Play, Square } from "lucide-react";
-import { useAction } from "next-safe-action/hooks";
-import { toast } from "sonner";
-
+import { saveStudySession } from "@/actions/create-study";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { saveStudySession } from "@/actions/create-study";
+import { BookOpen, Pause, Play, Square } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-interface WritingTimerProps {
+interface ReadingTimerProps {
   todayMinutes: number;
   totalMinutes: number;
   onSave: (minutes: number) => void;
@@ -29,11 +26,11 @@ function formatTimerDisplay(seconds: number) {
   return `${hours.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
 }
 
-export function WritingTimer({
+export function ReadingTimer({
   todayMinutes,
   totalMinutes,
   onSave,
-}: WritingTimerProps) {
+}: ReadingTimerProps) {
   const [timer, setTimer] = useState({ isRunning: false, seconds: 0 });
   const { executeAsync: executeSave, isPending } = useAction(saveStudySession);
 
@@ -55,35 +52,40 @@ export function WritingTimer({
 
     const minutes = Math.floor(timer.seconds / 60);
 
-    const result = await executeSave({ type: "writing", minutes });
+    const result = await executeSave({ type: "reading", minutes });
 
     if (result?.serverError) {
-      toast.error("Erro ao salvar sessão de escrita.");
+      console.log(result.serverError);
+      toast.error("Erro ao salvar sessão de leitura.");
       return;
     }
 
     onSave(minutes);
     setTimer({ isRunning: false, seconds: 0 });
-    toast.success(`${minutes} min de escrita salvos!`);
+    toast.success(`${minutes} min de leitura salvos!`);
   };
 
   return (
     <div>
       <h3 className="text-foreground mb-4 flex items-center gap-2 font-semibold">
-        <PenLine className="text-primary h-5 w-5" />
-         Writing Timer
+        <BookOpen className="text-primary h-5 w-5" />
+        Reading Timer
       </h3>
 
       <div className="grid grid-cols-3 gap-4">
         <Card className="border-border/50 rounded-xl p-5">
-          <span className="text-muted-foreground text-sm font-semibold">Today Writing</span>
+          <span className="text-muted-foreground text-sm font-semibold">
+            Today Reading
+          </span>
           <p className="text-foreground mt-1 text-2xl font-bold">
             {formatTime(todayMinutes)}
           </p>
         </Card>
 
-        <Card className="border-border/50 rounded-xl p-5">
-          <span className="text-muted-foreground text-sm font-semibold">Total Writing </span>
+        <Card className="bg-card/80 border-border/50 rounded-xl p-5">
+          <span className="text-muted-foreground text-sm font-semibold">
+            Total Reading
+          </span>
           <p className="text-foreground mt-1 text-2xl font-bold">
             {formatTime(totalMinutes)}
           </p>
@@ -91,7 +93,9 @@ export function WritingTimer({
 
         <Card className="border-border/50 rounded-xl p-5">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-muted-foreground text-sm font-semibold">Counter</span>
+            <span className="text-muted-foreground text-sm font-semibold">
+              Counter
+            </span>
           </div>
 
           <p className="text-foreground mb-3 font-mono text-2xl font-bold">
@@ -150,7 +154,7 @@ export function WritingTimer({
 
           {timer.seconds > 0 && timer.seconds < 60 && (
             <p className="text-muted-foreground mt-2 text-center text-xs">
-               Min 60 segonds to save session
+              Min 60 segonds to save session
             </p>
           )}
         </Card>

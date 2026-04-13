@@ -2,16 +2,16 @@
 
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { WordCard } from "./_components/Word-Card";
+import { WordCard } from "./Word-Card";
 import { Word } from "@/types/words";
 import { useState, useMemo } from "react";
-import { AddWordDialog } from "./_components/Add-Word-Card";
+import { AddWordDialog } from "./Add-Word-Card";
 
 interface WordsTabProps {
   words: Word[];
 }
 
-export function WordsTab({ words }: WordsTabProps) {
+export default function WordsTab({ words }: WordsTabProps) {
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -21,7 +21,7 @@ export function WordsTab({ words }: WordsTabProps) {
     return words.filter(
       (word) =>
         word.text.toLowerCase().includes(search.toLowerCase()) ||
-        word.textTranslated.toLowerCase().includes(search.toLowerCase())
+        word.textTranslated.toLowerCase().includes(search.toLowerCase()),
     );
   }, [words, search]);
 

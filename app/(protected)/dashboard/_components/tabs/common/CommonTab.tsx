@@ -2,18 +2,21 @@
 
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { AddCommonPhraseDialog } from "./_components/Add-Common-Phrase-Dialog";
+import { AddCommonPhraseDialog } from "./Add-Common-Phrase-Dialog";
 import { useMemo, useState } from "react";
-import { CommonPhraseCard } from "./_components/Common-Phrase-Card";
+import { CommonPhraseCard } from "./Common-Phrase-Card";
 import { Category, CommonPhrase } from "@/types/common";
-import { CategoryFilter } from "./_components/Category-Filter";
+import { CategoryFilter } from "./Category-Filter";
 
 interface CommonTabProps {
   commonPhrases: CommonPhrase[];
   commonCategories: Category[];
 }
 
-export function CommonTab({ commonPhrases, commonCategories }: CommonTabProps) {
+export default function CommonTab({
+  commonPhrases,
+  commonCategories,
+}: CommonTabProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");

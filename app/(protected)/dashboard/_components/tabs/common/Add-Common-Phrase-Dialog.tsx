@@ -38,7 +38,7 @@ export function AddCommonPhraseDialog({
   setIsOpen,
 }: AddPhrasDialogProps) {
   const router = useRouter();
-  
+
   const {
     executeAsync: executeCreateCommonPhrase,
     isPending: isPendingCommonPhrase,
@@ -52,7 +52,6 @@ export function AddCommonPhraseDialog({
       categoryIds: [],
     },
   });
-
 
   const onSubmit = async (data: FormSchema) => {
     const result = await executeCreateCommonPhrase(data);

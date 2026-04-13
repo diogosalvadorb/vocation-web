@@ -33,11 +33,10 @@ type FormSchema = z.infer<typeof formSchema>;
 
 export function AddWordDialog({ isOpen, setIsOpen }: AddWordDialogProps) {
   const router = useRouter();
-  
+
   const { executeAsync: executeCreateWord, isPending: isCreatingWord } =
     useAction(createWord);
 
-  
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {

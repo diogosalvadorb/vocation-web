@@ -1,16 +1,16 @@
 "use client";
 
-import { StudySummary } from "./_components/StudySummary";
-import { VideoMetrics } from "./_components/VideoMetrics";
-import { ReadingTimer } from "./_components/ReadingTimer";
-import { WritingTimer } from "./_components/WritingTimer";
-import { YoutubeConfigDialog } from "./_components/Youtube-Config-Dialog";
+import { StudySummary } from "./StudySummary";
+import { VideoMetrics } from "./VideoMetrics";
+import { ReadingTimer } from "./ReadingTimer";
+import { WritingTimer } from "./WritingTimer";
+import { YoutubeConfigDialog } from "./Youtube-Config-Dialog";
 import { useCallback, useEffect, useState } from "react";
 import { getInputEnglishPlaylist } from "@/actions/get-youtube-playlist";
 import { PlaylistMetrics } from "@/types/video";
 import { getStudyStats } from "@/actions/get-study-stats";
 
-export function MetricsTab() {
+export default function MetricsTab() {
   const [dataVideos, setDataVideos] = useState<PlaylistMetrics | null>(null);
   const [loadingVideos, setLoadingVideos] = useState(true);
   const [hasYoutubeConfig, setHasYoutubeConfig] = useState<boolean | null>(

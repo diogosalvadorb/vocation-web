@@ -17,7 +17,6 @@ import { toast } from "sonner";
 import z from "zod";
 import { useRef, useState } from "react";
 
-
 interface WordDialogProps {
   word: Word;
   isOpen: boolean;

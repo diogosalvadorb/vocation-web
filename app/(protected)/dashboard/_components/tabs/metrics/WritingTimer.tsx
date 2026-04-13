@@ -1,36 +1,39 @@
-import { saveStudySession } from "@/actions/create-study";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { BookOpen, Pause, Play, Square } from "lucide-react";
-import { useAction } from "next-safe-action/hooks";
+"use client";
+
 import { useEffect, useState } from "react";
+import { Pause, PenLine, Play, Square } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
 
-interface ReadingTimerProps {
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { saveStudySession } from "@/actions/create-study";
+
+interface WritingTimerProps {
   todayMinutes: number;
   totalMinutes: number;
   onSave: (minutes: number) => void;
 }
 
 function formatTime(minutes: number) {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    if (hours > 0) return `${hours}h ${mins}min`;
-    return `${mins}min`;
-  }
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  if (hours > 0) return `${hours}h ${mins}min`;
+  return `${mins}min`;
+}
 
-  function formatTimerDisplay(seconds: number) {
-    const hours = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    return `${hours.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  }
+function formatTimerDisplay(seconds: number) {
+  const hours = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+  return `${hours.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+}
 
-export function ReadingTimer({
+export function WritingTimer({
   todayMinutes,
   totalMinutes,
   onSave,
-}: ReadingTimerProps) {
+}: WritingTimerProps) {
   const [timer, setTimer] = useState({ isRunning: false, seconds: 0 });
   const { executeAsync: executeSave, isPending } = useAction(saveStudySession);
 
@@ -52,36 +55,39 @@ export function ReadingTimer({
 
     const minutes = Math.floor(timer.seconds / 60);
 
-    const result = await executeSave({ type: "reading", minutes });
+    const result = await executeSave({ type: "writing", minutes });
 
     if (result?.serverError) {
-      console.log(result.serverError);
-      toast.error("Erro ao salvar sessão de leitura.");
+      toast.error("Erro ao salvar sessão de escrita.");
       return;
     }
 
     onSave(minutes);
     setTimer({ isRunning: false, seconds: 0 });
-    toast.success(`${minutes} min de leitura salvos!`);
+    toast.success(`${minutes} min de escrita salvos!`);
   };
 
   return (
     <div>
       <h3 className="text-foreground mb-4 flex items-center gap-2 font-semibold">
-        <BookOpen className="text-primary h-5 w-5" />
-        Reading Timer
+        <PenLine className="text-primary h-5 w-5" />
+        Writing Timer
       </h3>
 
       <div className="grid grid-cols-3 gap-4">
         <Card className="border-border/50 rounded-xl p-5">
-          <span className="text-muted-foreground text-sm font-semibold">Today Reading</span>
+          <span className="text-muted-foreground text-sm font-semibold">
+            Today Writing
+          </span>
           <p className="text-foreground mt-1 text-2xl font-bold">
             {formatTime(todayMinutes)}
           </p>
         </Card>
 
-        <Card className="bg-card/80 border-border/50 rounded-xl p-5">
-          <span className="text-muted-foreground text-sm font-semibold">Total Reading</span>
+        <Card className="border-border/50 rounded-xl p-5">
+          <span className="text-muted-foreground text-sm font-semibold">
+            Total Writing{" "}
+          </span>
           <p className="text-foreground mt-1 text-2xl font-bold">
             {formatTime(totalMinutes)}
           </p>
@@ -89,7 +95,9 @@ export function ReadingTimer({
 
         <Card className="border-border/50 rounded-xl p-5">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-muted-foreground text-sm font-semibold">Counter</span>
+            <span className="text-muted-foreground text-sm font-semibold">
+              Counter
+            </span>
           </div>
 
           <p className="text-foreground mb-3 font-mono text-2xl font-bold">

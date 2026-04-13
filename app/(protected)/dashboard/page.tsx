@@ -1,13 +1,14 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
-import { WordsTab } from "./wordTab/page";
-import { MetricsTab } from "./metricsTab/page";
-import { CommonTab } from "./commonTab/page";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Header } from "@/components/header";
 import { getWords } from "@/data/word";
 import { getCommonCategories, getCommonPhrases } from "@/data/common";
+import WordsTab from "./_components/tabs/word/WordsTab";
+import CommonTab from "./_components/tabs/common/CommonTab";
+import MetricsTab from "./_components/tabs/metrics/MetricsTab";
 
 export default async function Dashboard() {
   const session = await auth.api.getSession({
