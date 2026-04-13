@@ -40,7 +40,7 @@ export const getCommonPhrases = async ({
 export const getCommonCategories = async () => {
   const categories = await prisma.category.findMany({
     orderBy: {
-      name: "asc",
+      name: "desc",
     },
   });
 

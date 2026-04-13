@@ -6,6 +6,9 @@ export const getWords = async (userId: string): Promise<Word[]> => {
     where: {
       userId,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
     include: {
       sentences: true,
     },
