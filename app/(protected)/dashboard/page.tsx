@@ -5,7 +5,7 @@ import { WordsTab } from "./wordTab/page";
 import { MetricsTab } from "./metricsTab/page";
 import { CommonTab } from "./commonTab/page";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Header } from "@/components/ui/Header";
+import { Header } from "@/components/header";
 import { getWords } from "@/data/word";
 import { getCommonCategories, getCommonPhrases } from "@/data/common";
 
@@ -52,7 +52,10 @@ export default async function Dashboard() {
             <WordsTab words={words} />
           </TabsContent>
           <TabsContent value="commons">
-            <CommonTab commonPhrases={commonPhrases} commonCategories={commonCategories} />
+            <CommonTab
+              commonPhrases={commonPhrases}
+              commonCategories={commonCategories}
+            />
           </TabsContent>
           <TabsContent value="metrics">
             <MetricsTab />
