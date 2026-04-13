@@ -24,6 +24,9 @@ export const getCommonPhrases = async ({
           }
         : {}),
     },
+        orderBy: {
+      createdAt: "desc",
+    },
 
     include: {
       categories: {
