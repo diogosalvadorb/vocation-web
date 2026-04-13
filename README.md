@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vocation 📚
 
-## Getting Started
+**Seu caderno de vocabulário** — uma plataforma pessoal de aprendizado de inglês com rastreamento de vocabulário, cronômetros de estudo, frases comuns e métricas de playlist "input" do YouTube API.
 
-First, run the development server:
+---
+
+## Deploy
+
+O projeto está  publicado na [Vercel](https://vercel.com).
+
+
+---
+
+## Funcionalidades
+
+- **Aba Palavras** — Adicione palavras em inglês com tradução para português, gera pronúncia em áudio via OpenAI e adicione frases de exemplo
+- **Aba Frases Comuns** — Armazene frases comuns em inglês organizadas por categorias, com reprodução de áudio
+- **Aba Métricas** — Acompanhe sessões de leitura e escrita com cronômetros e monitore a duração da sua playlist de input em inglês no YouTube
+
+---
+
+## Stack Tecnológico
+
+| Camada | Tecnologia |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| Linguagem | TypeScript |
+| Estilização | Tailwind CSS v4 + shadcn/ui |
+| Banco de Dados | PostgreSQL + Prisma ORM |
+| Autenticação | better-auth (Google OAuth) |
+| Formulários | react-hook-form + Zod |
+| Server Actions | next-safe-action |
+| Áudio | OpenAI TTS API + Cloudflare R2 |
+| Componentes UI | Radix UI + Lucide React |
+
+---
+
+## Pré-requisitos
+
+- Node.js 20.9.0
+- Banco de dados PostgreSQL
+- Credenciais do Google OAuth
+- Chave de API da OpenAI
+- Bucket no Cloudflare R2 (para armazenamento de áudio)
+
+---
+
+## Como Começar
+
+### 1. Clone e instale as dependências
+
+```bash
+git clone https://github.com/diogosalvadorb/vocation-web.git
+cd vocation-web
+npm install
+```
+
+### 2. Configure as variáveis de ambiente
+
+Crie um arquivo `.env` na raiz do projeto:
+
+```env
+# Banco de Dados
+DATABASE_URL="postgresql://usuario:senha@localhost:5432/vocation"
+
+# Autenticação
+BETTER_AUTH_SECRET="sua-chave-secreta"
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+
+# Google OAuth
+GOOGLE_CLIENT_ID="seu-google-client-id"
+GOOGLE_CLIENT_SECRET="seu-google-client-secret"
+
+# OpenAI
+OPENAI_API_KEY="sua-openai-api-key"
+
+# Cloudflare R2
+CLOUDFLARE_R2_ACCOUNT_ID="seu-account-id"
+CLOUDFLARE_R2_ACCESS_KEY_ID="seu-access-key-id"
+CLOUDFLARE_R2_SECRET_ACCESS_KEY="seu-secret-access-key"
+CLOUDFLARE_R2_BUCKET_NAME="nome-do-seu-bucket"
+CLOUDFLARE_R2_PUBLIC_URL="https://sua-url-publica.r2.dev"
+
+# Criptografia (para chaves da API do YouTube armazenadas no banco)
+ENCRYPTION_KEY="string-hexadecimal-de-64-caracteres"
+```
+
+Para gerar uma chave de criptografia:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+### 3. Configure o banco de dados
+
+```bash
+npx prisma gerenarate
+npx prisma db push
+```
+
+### 4. Inicie o servidor de desenvolvimento
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Acesse [http://localhost:3000](http://localhost:3000) no seu navegador.
