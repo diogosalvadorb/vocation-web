@@ -4,6 +4,7 @@ import { protectedActionClient } from "@/lib/action-client";
 import { prisma } from "@/lib/prisma";
 import { generateAndUploadAudio } from "@/lib/openai-tts";
 import z from "zod";
+import { returnValidationErrors } from "next-safe-action";
 
 const inputSchema = z.object({
   wordId: z.string(),
@@ -14,6 +15,17 @@ const inputSchema = z.object({
 export const createSentence = protectedActionClient
   .inputSchema(inputSchema)
   .action(async ({ parsedInput, ctx }) => {
+
+    const existingSentence = await prisma.exampleSentence.findFirst({
+      where: { text: parsedInput.text },
+    });
+
+    if (existingSentence) {
+      returnValidationErrors(inputSchema, {
+        _errors: ["A sentence with this text already exists."],
+      });
+    }
+    
     const sentence = await prisma.exampleSentence.create({
       data: {
         text: parsedInput.text,

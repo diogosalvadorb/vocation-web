@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { generateAndUploadAudio } from "@/lib/openai-tts";
 import z from "zod";
 import { revalidatePath } from "next/cache";
+import { returnValidationErrors } from "next-safe-action";
 
 const inputSchema = z.object({
   text: z.string().min(1).max(300),
@@ -15,6 +16,16 @@ const inputSchema = z.object({
 export const createCommonPhrase = protectedActionClient
   .inputSchema(inputSchema)
   .action(async ({ parsedInput, ctx }) => {
+    const existingCommonPhrase = await prisma.commonPhrase.findFirst({
+      where: { text: parsedInput.text },
+    });
+
+    if (existingCommonPhrase) {
+      returnValidationErrors(inputSchema, {
+        _errors: ["A common phrase with this text already exists."],
+      });
+    }
+    
     const phrase = await prisma.commonPhrase.create({
       data: {
         text: parsedInput.text,
