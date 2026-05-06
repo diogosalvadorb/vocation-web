@@ -1,10 +1,13 @@
 "use client";
 
-import { Volume2, VolumeX, Loader2 } from "lucide-react";
+import { Loader2, Volume2, VolumeX } from "lucide-react";
+import { useRef, useState } from "react";
+
+import { BlurredTranslation } from "@/components/blurred-translation";
 import { Button } from "@/components/ui/button";
 import { Word } from "@/types/words";
+
 import { WordDialog } from "./Word-Dialog";
-import { useState, useRef } from "react";
 
 interface WordCardProps {
   word: Word;
@@ -85,9 +88,9 @@ export function WordCard({ word }: WordCardProps) {
           <p className="text-foreground group-hover:text-primary font-semibold transition-colors">
             {word.text}
           </p>
-          <p className="text-muted-foreground truncate text-sm">
+          <BlurredTranslation className="text-muted-foreground truncate text-sm">
             {word.textTranslated}
-          </p>
+          </BlurredTranslation>
         </div>
       </div>
       <WordDialog

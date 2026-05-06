@@ -1,10 +1,12 @@
 "use client";
 
+import { Loader2, Volume2, VolumeX } from "lucide-react";
+import { useRef, useState } from "react";
+
+import { BlurredTranslation } from "@/components/blurred-translation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CommonPhrase } from "@/types/common";
-import { Loader2, Volume2, VolumeX } from "lucide-react";
-import { useRef, useState } from "react";
 
 interface CommonPhraseCardProps {
   commonPhrase: CommonPhrase;
@@ -82,9 +84,9 @@ export function CommonPhraseCard({ commonPhrase }: CommonPhraseCardProps) {
           <p className="text-foreground group-hover:text-primary font-semibold transition-colors">
             {commonPhrase.text}
           </p>
-          <p className="text-muted-foreground mt-0.5 text-sm">
+          <BlurredTranslation className="text-muted-foreground mt-0.5 text-sm">
             {commonPhrase.textTranslated}
-          </p>
+          </BlurredTranslation>
         </div>
       </div>
     </Card>

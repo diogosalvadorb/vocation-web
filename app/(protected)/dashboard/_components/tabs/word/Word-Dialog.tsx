@@ -1,4 +1,13 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2, Plus, Volume2, VolumeX } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
+import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import z from "zod";
+
 import { createSentence } from "@/actions/create-sentence";
+import { BlurredTranslation } from "@/components/blurred-translation";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,13 +18,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Word } from "@/types/words";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Plus, Volume2, VolumeX } from "lucide-react";
-import { useAction } from "next-safe-action/hooks";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import z from "zod";
-import { useRef, useState } from "react";
 
 interface WordDialogProps {
   word: Word;
@@ -153,8 +155,11 @@ export function WordDialog({ word, isOpen, setIsOpen }: WordDialogProps) {
           <DialogTitle className="flex items-center gap-2 text-lg">
             <span className="text-primary font-bold">{word.text}</span>
             <span className="text-muted-foreground text-base font-normal">
-              — {word.textTranslated}
+              -
             </span>
+            <BlurredTranslation className="text-muted-foreground inline text-base font-normal">
+              {word.textTranslated}
+            </BlurredTranslation>
           </DialogTitle>
           <DialogDescription className="text-muted-foreground/80">
             List of sentences for the selected word.
@@ -175,9 +180,9 @@ export function WordDialog({ word, isOpen, setIsOpen }: WordDialogProps) {
                   <SentenceAudioButton soundUrl={sentence.soundUrl} />
                 </div>
 
-                <p className="text-muted-foreground mt-2 text-sm italic">
+                <BlurredTranslation className="text-muted-foreground mt-2 text-sm italic">
                   {sentence.textTranslated}
-                </p>
+                </BlurredTranslation>
               </div>
             ))}
           </div>
