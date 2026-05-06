@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
-import { Alan_Sans } from "next/font/google";
-import "./globals.css";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+
 import { Toaster } from "@/components/ui/sonner";
 
-const alanSans = Alan_Sans({
-  variable: "--font-alan-sans",
+import "./globals.css";
+
+const fontSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-sans",
+});
+
+const fontInter = Inter({
+  subsets: ["latin"],
+  variable: "--font-alt",
 });
 
 export const metadata: Metadata = {
@@ -22,9 +28,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${alanSans.variable} h-full antialiased`}
+      className={`${fontSans.variable} ${fontInter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}<Toaster /></body>
+      <body className="flex min-h-full flex-col">
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }
